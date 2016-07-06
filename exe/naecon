@@ -3,4 +3,3 @@
 require 'naecon'
 
 store = Naecon::Store.new
-store.fetch
