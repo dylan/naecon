@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby
+
+require 'naecon'
+
+store = Naecon::Store.new
+store.fetch
