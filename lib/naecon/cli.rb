@@ -1,26 +1,23 @@
 require 'readline'
+require 'thor'
 
 module Naecon
   class CLI < Thor
-    def initialize
-      @store = Naecon::Store.new
-    end
 
-    desc 'Starts a REPL.'
+    no_commands {
+      def start
+        @store = Naecon::Store.new
+      end
+    }
+
+    desc 'repl', 'Starts a REPL.'
+    # Starts a REPL.
     def repl
-      LIST = %w( search
-                 download
-                 open
-                 help
-                 history
-                 quit
-                 url
-                 next
-                 clear
-                 prev
-                 past ).sort
+      start
 
-      comp = proc { |s| LIST.grep(/^#{Regexp.escape(s)}/) }
+      list = %w(shards).sort
+
+      comp = proc { |s| list.grep(/^#{Regexp.escape(s)}/) }
 
       Readline.completion_append_character = ' '
       Readline.completion_proc = comp
@@ -31,16 +28,15 @@ module Naecon
 
       while line = Readline.readline('> ', true)
         case line
-        when 'shards'
-          store.shards.each do |shard|
+        when /^shards/
+          @store.shards.each do |shard|
             puts shard.name
           end
-        when 'exit' || ':q' || 'quit'
+        when /^exit/, /^\:q/, /^quit/
           exit
         end
       end
     end
-
 
   end
 
